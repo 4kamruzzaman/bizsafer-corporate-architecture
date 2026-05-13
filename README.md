@@ -13,7 +13,7 @@ The BizSafer Global Engineering Lab runs on the exact same zero-downtime, contai
 
 ### Infrastructure Topology
 
-<pre>
+```mermaid
 graph TD
     Client([Global Enterprise Traffic]) --&gt;|HTTPS / WSS| CF[Cloudflare WAF &amp; Edge Routing]
     
@@ -45,7 +45,7 @@ graph TD
     class NextJS edge
     class Laravel core
     class PG,Redis,S3 data
-</pre>
+```
 
 ## Repository Architecture
 
