@@ -1,0 +1,40 @@
+# Reference Architecture: Local Replication Environment
+services:
+  web:
+    build:
+      context: ./bizsafer-web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./bizsafer-web:/app
+    environment:
+      - NODE_ENV=development
+
+  api:
+    build:
+      context: ./bizsafer-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./bizsafer-api:/var/www/html
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:18-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-bizsafer}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+      POSTGRES_DB: ${DB_NAME:-bizsafer_core}
+
+  redis:
+    image: redis:8-alpine
+    ports:
+      - "6379:6379"
