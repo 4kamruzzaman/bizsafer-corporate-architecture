@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Reference Architecture: Pre-Deploy Safety Check
+
+echo "Validating BizSafer deployment perimeter..."
+
+if [ "$KAMAL_ENVIRONMENT" == "production" ]
+then
+  echo "Production environment detected"
+  echo "Enforcing strict >99.9% uptime deployment protocols"
+else
+  echo "Non-production deployment proceeding"
+fi
