@@ -11,6 +11,42 @@ The cost of commodity infrastructure is unrecoverable downtime. Most engineering
 
 The BizSafer Global Engineering Lab runs on the exact same zero-downtime, container-native baseline we deploy for our Tier-1 enterprise clients. This repository details the high-availability infrastructure and deployment architecture designed to support our own corporate perimeter.
 
+### Infrastructure Topology
+
+<pre>
+graph TD
+    Client([Global Enterprise Traffic]) --&gt;|HTTPS / WSS| CF[Cloudflare WAF &amp; Edge Routing]
+    
+    subgraph Zero-Downtime Cluster
+        CF --&gt;|Validated Payloads| Proxy[Kamal Proxy]
+        
+        subgraph Edge Delivery Nodes
+            Proxy --&gt;|Atomic Routing| NextJS[Next.js 16 Standalone Containers]
+        end
+        
+        subgraph Isolated Application Core
+            Proxy --&gt;|API Traffic| Laravel[Laravel 13 Core &amp; Queue Workers]
+            NextJS --&gt;|Internal Fetches| Proxy
+        end
+        
+        subgraph Stateful Persistence Layer
+            Laravel --&gt;|Strict Isolation| PG[(PostgreSQL 18)]
+            Laravel --&gt;|High-Concurrency| Redis[(Redis 8)]
+            Laravel --&gt;|Object Persistence| S3[(External S3-Compatible Nodes)]
+        end
+    end
+    
+    classDef proxy fill:#2563eb,stroke:#fff,stroke-width:2px,color:#fff
+    classDef edge fill:#f59e0b,stroke:#fff,stroke-width:2px,color:#fff
+    classDef core fill:#dc2626,stroke:#fff,stroke-width:2px,color:#fff
+    classDef data fill:#059669,stroke:#fff,stroke-width:2px,color:#fff
+    
+    class Proxy proxy
+    class NextJS edge
+    class Laravel core
+    class PG,Redis,S3 data
+</pre>
+
 ## Repository Architecture
 
 We maintain strict decoupling within a monorepo structure to streamline our CI/CD pipelines while isolating runtime environments.
