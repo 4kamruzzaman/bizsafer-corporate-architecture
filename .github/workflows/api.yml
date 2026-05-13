@@ -1,0 +1,43 @@
+# Reference Architecture: BizSafer API Core CI
+name: API Core CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'bizsafer-api/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'bizsafer-api/**'
+
+jobs:
+  test-and-analyze:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./bizsafer-api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Enterprise PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, bcmath, intl, gd, exif, iconv
+          coverage: none
+
+      - name: Resolve Immutable Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Enforce Strict Static Analysis (PHPStan)
+        run: ./vendor/bin/phpstan analyse --memory-limit=2G
+
+      - name: Execute Core Unit Tests
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+          CACHE_STORE: array
+          QUEUE_CONNECTION: sync
+        run: php artisan test
