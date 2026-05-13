@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Reference Architecture: Post-Deploy Telemetry and Edge Purge
+
+echo "Deployment completed successfully"
+
+echo "Dispatching telemetry to Slack channels..."
+curl -X POST -H 'Content-type: application/json' \
+  --data '{"text":"BizSafer Enterprise Cluster: Atomic traffic swap successful."}' \
+  $SLACK_WEBHOOK_URL
+
+echo "Purging Cloudflare Edge Cache..."
+curl -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/purge_cache" \
+  -H "Authorization: Bearer $CF_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  --data '{"purge_everything":true}'
