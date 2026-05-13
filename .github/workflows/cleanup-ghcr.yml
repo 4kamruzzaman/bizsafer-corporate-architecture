@@ -1,0 +1,20 @@
+# Reference Architecture: BizSafer Registry Optimization
+name: Clean Stale GHCR Images
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Executes every Sunday at midnight
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge Legacy Corporate Images
+        uses: snok/container-retention-policy@v2
+        with:
+          image-names: bizsafer-lab/bizsafer-web-reference, bizsafer-lab/bizsafer-core-reference
+          cut-off: 2 weeks ago
+          keep-at-least: 5
+          account-type: personal
+          token: ${{ secrets.PAT_CLEANUP }}
