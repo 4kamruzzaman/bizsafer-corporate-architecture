@@ -1,0 +1,46 @@
+# Reference Architecture: BizSafer Corporate Orchestration
+service: bizsafer-corporate
+image: ghcr.io/bizsafer-lab/bizsafer-core-reference
+
+# ---------------------------------------------------------
+# Edge Nodes & API Core Servers
+# ---------------------------------------------------------
+servers:
+  web:
+    hosts:
+      - <production-node-ip-1>
+      - <production-node-ip-2>
+    labels:
+      kamal-proxy.route: "/"
+      kamal-proxy.healthcheck.path: "/up"
+      kamal-proxy.healthcheck.interval: "5s"
+  
+  # Isolated Queue Workers for High-Concurrency
+  worker:
+    hosts:
+      - <worker-node-ip-1>
+    cmd: php artisan queue:work redis --tries=3 --max-time=3600
+    labels:
+      kamal-proxy.route: "none" # Workers do not receive HTTP traffic
+
+# ---------------------------------------------------------
+# Immutable Registry & CI/CD Credentials
+# ---------------------------------------------------------
+registry:
+  server: ghcr.io
+  username: bizsafer-deploy
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# ---------------------------------------------------------
+# Strict Secret Injection (Zero Hardcoded Credentials)
+# ---------------------------------------------------------
+env:
+  clear:
+    PHP_OPCACHE_ENABLE: "1"
+    APP_ENV: "production"
+  secret:
+    - APP_KEY
+    - DATABASE_URL
+    - REDIS_URL
+    - STRIPE_SECRET_KEY
