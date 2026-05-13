@@ -11,6 +11,17 @@ The cost of commodity infrastructure is unrecoverable downtime. Most engineering
 
 The BizSafer Global Engineering Lab runs on the exact same zero-downtime, container-native baseline we deploy for our Tier-1 enterprise clients. This repository details the high-availability infrastructure and deployment architecture designed to support our own corporate perimeter.
 
+## Repository Architecture
+
+We maintain strict decoupling within a monorepo structure to streamline our CI/CD pipelines while isolating runtime environments.
+```text
+├── .github/workflows/   # Strict GitHub Actions CI/CD pipelines  
+├── bizsafer-api/        # Laravel 13 API core & queue workers  
+├── bizsafer-web/        # Next.js 16 standalone edge nodes  
+├── config/deploy.yml    # Kamal 2 orchestration configuration  
+└── docker-compose.yml   # Local replication environment
+```
+
 ## Locked SRE Metrics
 
 * **Uptime Target:** >99.9% via a zero single point of failure container-native architecture.
