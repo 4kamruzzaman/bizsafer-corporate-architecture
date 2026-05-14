@@ -49,14 +49,14 @@ graph TD
 
 ## Repository Architecture
 
-We maintain strict decoupling within a monorepo structure to streamline our CI/CD pipelines while isolating runtime environments.
-```text
-├── .github/workflows/   # Strict GitHub Actions CI/CD pipelines  
-├── bizsafer-api/        # Laravel 13 API core & queue workers  
-├── bizsafer-web/        # Next.js 16 standalone edge nodes  
-├── config/deploy.yml    # Kamal 2 orchestration configuration  
-└── docker-compose.yml   # Local replication environment
-```
+This repository contains the sanitized reference blueprints for the BizSafer corporate infrastructure. We maintain strict decoupling within a monorepo structure to streamline our GitOps pipelines while aggressively isolating runtime environments.
+
+* **.github/workflows/**: We use these strict CI/CD pipelines to completely eliminate manual server interventions. They enforce static analysis, standalone edge compilation, and atomic deployment via Kamal 2.
+* **.kamal/**: We use these lifecycle hooks to enforce pre-deployment safety gates and dispatch automated Slack telemetry the moment our containers pass production health checks.
+* **bizsafer-api/**: We use this boundary to isolate the Laravel 13 and PHP 8.4 API core. The reference configuration proves our strict caching optimization and native Redis integration for background worker processes.
+* **bizsafer-web/**: We use this isolated environment to containerize our Next.js 16 edge nodes. The deployment proves our strict standalone extraction methodology engineered to guarantee sub-200ms global latency.
+* **config/deploy.yml**: We use this master orchestration file to govern our Kamal 2 proxy. It proves our multi-server atomic traffic swapping and strict secret injection without exposing bare-metal credentials.
+* **docker-compose.yml**: We use this localized configuration to guarantee 100% stateful parity between our local engineering machines and the live PostgreSQL/Redis cluster without relying on remote cloud connections.
 
 ## Locked SRE Metrics
 
