@@ -58,11 +58,10 @@ This repository contains the sanitized reference blueprints for the BizSafer cor
 * **config/deploy.yml**: We use this master orchestration file to govern our Kamal 2 proxy. It proves our multi-server atomic traffic swapping and strict secret injection without exposing bare-metal credentials.
 * **docker-compose.yml**: We use this localized configuration to guarantee 100% stateful parity between our local engineering machines and the live PostgreSQL/Redis cluster without relying on remote cloud connections.
 
-## Locked SRE Metrics
-
-* **Uptime Target:** >99.9% via a zero single point of failure container-native architecture.
-* **Global Latency:** Sub-200ms latency enforced by edge computing and optimized database indexing.
-* **MTTR:** <60s via automated self-healing rollouts and strict continuous delivery pipelines.
+## Locked Performance Baselines
+- *Uptime Target:* >99.9% via a zero single point of failure container-native architecture.
+- *Global Latency:* Sub-200ms latency enforced by edge computing and optimized database indexing.
+- *MTTR:* <60s via automated self-healing rollouts and strict continuous delivery pipelines.
 
 ## The Architecture Stack
 
